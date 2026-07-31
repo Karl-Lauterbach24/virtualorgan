@@ -1,0 +1,8 @@
+flask
+flask-login
+werkzeug
+mido
+python-rtmidi
+pyFluidSynth
+numpy
+music21
