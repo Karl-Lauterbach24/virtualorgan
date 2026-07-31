@@ -1,0 +1,14 @@
+[Unit]
+Description=Virtual Organ First-Boot Setup
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=!/opt/virtualorgan/data/.firstboot_done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/virtualorgan-firstboot.sh
+TimeoutStartSec=0
+StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target
