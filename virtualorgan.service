@@ -1,0 +1,19 @@
+[Unit]
+Description=Virtual Organ Webserver
+After=network-online.target sound.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/virtualorgan/app
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/virtualorgan/venv/bin/python /opt/virtualorgan/app/app.py
+Restart=on-failure
+RestartSec=2
+User=virtualorgan
+Group=audio
+SupplementaryGroups=bluetooth
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
