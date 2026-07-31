@@ -1,0 +1,5 @@
+# Allows the unprivileged 'virtualorgan' service account to apply settings
+# changes made in the web UI (Kiosk-Modus toggle, Hostname) that require
+# root, without running the whole webserver as root. Restricted to exactly
+# these two fixed helper scripts.
+virtualorgan ALL=(root) NOPASSWD: /usr/local/sbin/virtualorgan-kiosk-ctl.sh start, /usr/local/sbin/virtualorgan-kiosk-ctl.sh stop, /usr/local/sbin/virtualorgan-set-hostname.sh *
