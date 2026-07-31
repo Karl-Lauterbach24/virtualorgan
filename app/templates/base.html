@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32.png') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon-180.png') }}">
+<title>Virtual Organ</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="topbar">
+  <div class="brand">🎹 Virtual&nbsp;Organ</div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" data-soft-nav>Bibliothek</a>
+    <a href="{{ url_for('organ_page') }}" data-soft-nav>Virtuelle Orgel</a>
+    {% if current_user.is_authenticated and current_user.is_admin() %}
+    <a href="{{ url_for('settings') }}">Einstellungen</a>
+    {% endif %}
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('logout') }}">Abmelden ({{ current_user.username }})</a>
+    {% else %}
+    <a href="{{ url_for('login') }}">Anmelden</a>
+    {% endif %}
+  </div>
+</nav>
+{% if request.endpoint != 'login' %}
+<div class="transport" id="transportBar">
+  <select id="outputSelect">
+    {% for o in (outputs or []) %}
+    <option value="{{ o.id }}" {% if o.id == current_output %}selected{% endif %}>{{ o.label }}</option>
+    {% endfor %}
+  </select>
+  <span id="nowPlayingTitle" class="transport-title">Kein Stück ausgewählt</span>
+  <button id="transportPlayPause" class="transport-btn" disabled title="Pause/Fortsetzen">⏸</button>
+  <button id="stopBtn" class="transport-btn" disabled title="Stopp">■</button>
+</div>
+{% endif %}
+<main id="pageMain">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
