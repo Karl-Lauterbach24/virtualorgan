@@ -1,0 +1,24 @@
+[Unit]
+Description=Virtual Organ Kiosk (HDMI Vollbild)
+After=virtualorgan.service systemd-user-sessions.service
+Requires=virtualorgan.service
+ConditionPathExists=/opt/virtualorgan/data/kiosk_enabled
+
+[Service]
+Type=simple
+User=virtualorgan
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+ExecStartPre=/bin/sh -c 'until curl -sf http://localhost:5000/ >/dev/null; do sleep 1; done'
+ExecStart=/usr/bin/cage -- /usr/bin/chromium \
+  --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble \
+  --disable-translate --check-for-update-interval=31536000 \
+  --enable-features=OverlayScrollbar --no-first-run \
+  http://localhost:5000/
+Restart=always
+RestartSec=3
+TTYPath=/dev/tty1
+StandardInput=tty
+StandardOutput=journal
+
+[Install]
+WantedBy=graphical.target
