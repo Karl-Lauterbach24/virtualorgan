@@ -27,6 +27,6 @@ A Raspberry Pi based virtual pipe organ with a modern web interface.
 ## Installation
 
 ```bash
-git clone https://github.com/<username>/virtual-organ.git
+git clone https://github.com/Karl-Lauterbach24/virtual-organ.git
 cd virtual-organ
 ./scripts/install.sh
