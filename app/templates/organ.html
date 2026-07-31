@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h2>Visualizer</h2>
+  <div id="visualizer"></div>
+</div>
+
+<div class="card" id="manualsCard"></div>
+
+<div class="card">
+  <h2>Externe MIDI-Geräte</h2>
+  <div class="table-scroll">
+  <table class="filelist" id="routeTable">
+    <thead><tr><th>Gerät</th><th>Modus</th><th>Kanal (Ein)</th><th>Ziel-Kanal</th><th></th></tr></thead>
+    <tbody>
+    {% for r in routes %}
+    <tr>
+      <td>{{ r.port_name }}</td>
+      <td>{{ 'Mehrere Manuale (1:1 durchgereicht)' if r.mode == 'multi' else 'Ein Manual' }}</td>
+      <td>{{ 'Alle' if r.channel_in == -1 else r.channel_in + 1 }}</td>
+      <td>{{ '–' if r.mode == 'multi' else r.channel_out + 1 }}</td>
+      <td><button class="btn-delete-route">🗑</button></td>
+    </tr>
+    {% endfor %}
+    {% if not routes %}
+    <tr><td colspan="5" class="empty">Noch keine Zuordnung. Unten ein MIDI-Gerät hinzufügen.</td></tr>
+    {% endif %}
+    </tbody>
+  </table>
+  </div>
+  <h3>Neue Zuordnung</h3>
+  <label>MIDI-Gerät</label>
+  <select id="portSelect">{% for p in inputs %}<option value="{{ p }}">{{ p }}</option>{% endfor %}</select>
+  <label>Modus</label>
+  <select id="routeMode">
+    <option value="single">Bedient nur ein Manual (auf einen Kanal zusammenfassen)</option>
+    <option value="multi">Bedient mehrere Manuale (Kanäle des Geräts unverändert durchreichen)</option>
+  </select>
+  <label>Eingangskanal (nur "ein Manual", leer = alle)</label>
+  <input type="number" id="chIn" min="1" max="16" placeholder="alle">
+  <label>Ziel-Kanal / Manual (nur "ein Manual")</label>
+  <input type="number" id="chOut" min="1" max="16" value="1">
+  <button id="addRoute">Zuordnung hinzufügen</button>
+</div>
+
+<div class="card">
+  <h2>MIDI-Eingang über den Browser</h2>
+  <p class="hint">Erlaubt MIDI-Controllern, die am Gerät hängt, mit dem dieser Browser läuft (statt am Pi selbst), direkt zu spielen.</p>
+  <button id="enableWebMidi">Browser-MIDI aktivieren</button>
+  <div id="webMidiList"></div>
+</div>
+{% endblock %}
